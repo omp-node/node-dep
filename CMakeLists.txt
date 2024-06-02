@@ -46,7 +46,7 @@ endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
 
-target_include_directories(${PROJECT_NAME} INTERFACE "include/", "include/node/")
+target_include_directories(${PROJECT_NAME} INTERFACE "include/" "include/node/")
 
 file(GLOB_RECURSE omp_lib_source_list "*.hpp" "*.h")
 

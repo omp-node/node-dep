@@ -2,7 +2,6 @@
   'variables': {
     'configuring_node%': 0,
     'asan%': 0,
-    'ubsan%': 0,
     'werror': '',                     # Turn off -Werror in V8 build.
     'visibility%': 'hidden',          # V8's visibility setting
     'target_arch%': 'ia32',           # set v8's target architecture
@@ -37,7 +36,7 @@
 
     # Reset this number to 0 on major V8 upgrades.
     # Increment by one for each non-official patch applied to deps/v8.
-    'v8_embedder_string': '-node.23',
+    'v8_embedder_string': '-node.37',
 
     ##### V8 defaults for Node.js #####
 
@@ -76,16 +75,8 @@
 
     'v8_win64_unwinding_info': 1,
 
-    # Variables controlling external defines exposed in public headers.
-    'v8_enable_conservative_stack_scanning%': 0,
-    'v8_enable_direct_local%': 0,
-    'v8_enable_map_packing%': 0,
-    'v8_enable_pointer_compression_shared_cage%': 0,
-    'v8_enable_sandbox%': 0,
-    'v8_enable_v8_checks%': 0,
-    'v8_enable_zone_compression%': 0,
+    # TODO(refack): make v8-perfetto happen
     'v8_use_perfetto': 0,
-    'tsan%': 0,
 
     ##### end V8 defaults #####
 
@@ -143,7 +134,7 @@
             }],
           ],
         },
-        'defines': [ 'DEBUG', '_DEBUG' ],
+        'defines': [ 'DEBUG', '_DEBUG', 'V8_ENABLE_CHECKS' ],
         'cflags': [ '-g', '-O0' ],
         'conditions': [
           ['OS in "aix os400"', {
@@ -239,7 +230,7 @@
             ],
           },],
           ['OS == "android"', {
-            'cflags': [ '-fPIC', '-I<(android_ndk_path)/sources/android/cpufeatures' ],
+            'cflags': [ '-fPIC' ],
             'ldflags': [ '-fPIC' ]
           }],
         ],
@@ -266,8 +257,11 @@
       }
     },
 
-    # Defines these mostly for node-gyp to pickup.
+    # Defines these mostly for node-gyp to pickup, and warn addon authors of
+    # imminent V8 deprecations, also to sync how dependencies are configured.
     'defines': [
+      'V8_DEPRECATION_WARNINGS',
+      'V8_IMMINENT_DEPRECATION_WARNINGS',
       '_GLIBCXX_USE_CXX11_ABI=1',
     ],
 
@@ -375,72 +369,14 @@
           }],
         ],
       }],
-      ['ubsan == 1 and OS != "mac" and OS != "zos"', {
-        'cflags+': [
-          '-fno-omit-frame-pointer',
-          '-fsanitize=undefined',
-        ],
-        'defines': [ 'UNDEFINED_SANITIZER'],
-        'cflags!': [ '-fno-omit-frame-pointer' ],
-        'ldflags': [ '-fsanitize=undefined' ],
-      }],
-      ['ubsan == 1 and OS == "mac"', {
-        'xcode_settings': {
-          'OTHER_CFLAGS+': [
-            '-fno-omit-frame-pointer',
-            '-fsanitize=undefined',
-            '-DUNDEFINED_SANITIZER'
-          ],
-        },
-        'target_conditions': [
-          ['_type!="static_library"', {
-            'xcode_settings': {'OTHER_LDFLAGS': ['-fsanitize=undefined']},
-          }],
-        ],
-      }],
-      # The defines bellow must include all things from the external_v8_defines
-      # list in v8/BUILD.gn.
-      ['v8_enable_v8_checks == 1', {
-        'defines': ['V8_ENABLE_CHECKS'],
-      }],
       ['v8_enable_pointer_compression == 1', {
-        'defines': ['V8_COMPRESS_POINTERS'],
-      }],
-      ['v8_enable_pointer_compression_shared_cage == 1', {
-        'defines': ['V8_COMPRESS_POINTERS_IN_SHARED_CAGE'],
-      }],
-      ['v8_enable_pointer_compression == 1 and v8_enable_pointer_compression_shared_cage != 1', {
-        'defines': ['V8_COMPRESS_POINTERS_IN_ISOLATE_CAGE'],
+        'defines': [
+          'V8_COMPRESS_POINTERS',
+          'V8_COMPRESS_POINTERS_IN_ISOLATE_CAGE',
+        ],
       }],
       ['v8_enable_pointer_compression == 1 or v8_enable_31bit_smis_on_64bit_arch == 1', {
         'defines': ['V8_31BIT_SMIS_ON_64BIT_ARCH'],
-      }],
-      ['v8_enable_zone_compression == 1', {
-        'defines': ['V8_COMPRESS_ZONES',],
-      }],
-      ['v8_enable_sandbox == 1', {
-        'defines': ['V8_ENABLE_SANDBOX',],
-      }],
-      ['v8_deprecation_warnings == 1', {
-        'defines': ['V8_DEPRECATION_WARNINGS',],
-      }],
-      ['v8_imminent_deprecation_warnings == 1', {
-        'defines': ['V8_IMMINENT_DEPRECATION_WARNINGS',],
-      }],
-      ['v8_use_perfetto == 1', {
-        'defines': ['V8_USE_PERFETTO',],
-      }],
-      ['v8_enable_map_packing == 1', {
-        'defines': ['V8_MAP_PACKING',],
-      }],
-      ['tsan == 1', {
-        'defines': ['V8_IS_TSAN',],
-      }],
-      ['v8_enable_conservative_stack_scanning == 1', {
-        'defines': ['V8_ENABLE_CONSERVATIVE_STACK_SCANNING',],
-      }],
-      ['v8_enable_direct_local == 1', {
-        'defines': ['V8_ENABLE_DIRECT_LOCAL',],
       }],
       ['OS == "win"', {
         'defines': [
