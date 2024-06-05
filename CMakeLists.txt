@@ -37,12 +37,12 @@ function(download_file url destination)
     )
 endfunction(download_file)
 
-if(NOT EXISTS "${CMAKE_SOURCE_DIR}/lib/win/libnode.lib")
-    download_file(
-      https://github.com/omp-node/node/releases/latest/download/libnode.lib
-        ${CMAKE_SOURCE_DIR}/lib/win/libnode.lib
-    )
-endif()
+# if(NOT EXISTS "${CMAKE_SOURCE_DIR}/lib/win/libnode.lib")
+#     download_file(
+#       https://github.com/omp-node/node/releases/latest/download/libnode.lib
+#         ${CMAKE_SOURCE_DIR}/lib/win/libnode.lib
+#     )
+# endif()
 
 add_library(${PROJECT_NAME} INTERFACE)
 
