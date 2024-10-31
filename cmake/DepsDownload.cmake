@@ -50,11 +50,23 @@ function(DownloadDeps)
                 DownloadFile("libnode.dll" "${__base_path}/x86/Release" "x86/Release")
                 DownloadFile("libnode.lib" "${__base_path}/x86/Debug" "x86/Debug")
                 DownloadFile("libnode.dll" "${__base_path}/x86/Debug" "x86/Debug")
+
+                file(COPY "${__base_path}/x86/Release/libnode.lib" DESTINATION "${__base_path}/x86/RelWithDebInfo")
+                file(COPY "${__base_path}/x86/Release/libnode.dll" DESTINATION "${__base_path}/x86/RelWithDebInfo")
+
+                file(COPY "${__base_path}/x86/Release/libnode.lib" DESTINATION "${__base_path}/x86/MinSizeRel")
+                file(COPY "${__base_path}/x86/Release/libnode.dll" DESTINATION "${__base_path}/x86/MinSizeRel")
             else()
                 DownloadFile("libnode.lib" "${__base_path}/x64/Release" "x64/Release")
                 DownloadFile("libnode.dll" "${__base_path}/x64/Release" "x64/Release")
                 DownloadFile("libnode.lib" "${__base_path}/x64/Debug" "x64/Debug")
                 DownloadFile("libnode.dll" "${__base_path}/x64/Debug" "x64/Debug")
+
+                file(COPY "${__base_path}/x64/Release/libnode.lib" DESTINATION "${__base_path}/x64/RelWithDebInfo")
+                file(COPY "${__base_path}/x64/Release/libnode.dll" DESTINATION "${__base_path}/x64/RelWithDebInfo")
+
+                file(COPY "${__base_path}/x64/Release/libnode.lib" DESTINATION "${__base_path}/x64/MinSizeRel")
+                file(COPY "${__base_path}/x64/Release/libnode.dll" DESTINATION "${__base_path}/x64/MinSizeRel")
             endif()
         elseif(UNIX)
             message("Checking binaries...")
