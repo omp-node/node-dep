@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.19)
 project(node-lib LANGUAGES C CXX VERSION 0.0.1)
 
+include(cmake/DepsDownload.cmake)
+
 function(GroupSourcesByFolder target)
     set(SOURCE_GROUP_DELIMITER "/")
     set(last_dir "")
