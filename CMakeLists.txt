@@ -28,21 +28,7 @@ endfunction()
 
 include(FetchContent)
 
-function(download_file url destination)
-    message(STATUS "Downloading ${url}")
-    file(DOWNLOAD
-        ${url}
-        ${destination}
-        SHOW_PROGRESS
-    )
-endfunction(download_file)
-
-# if(NOT EXISTS "${CMAKE_SOURCE_DIR}/lib/win/libnode.lib")
-#     download_file(
-#       https://github.com/omp-node/node/releases/latest/download/libnode.lib
-#         ${CMAKE_SOURCE_DIR}/lib/win/libnode.lib
-#     )
-# endif()
+DownloadDeps()
 
 add_library(${PROJECT_NAME} INTERFACE)
 
