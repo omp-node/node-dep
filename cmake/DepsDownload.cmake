@@ -5,11 +5,8 @@ function(DownloadFile name path urlpath)
     if(NOT EXISTS "${path}/${name}")
         message("Downloading ${name}...")
 
-        if("${urlpath}" STREQUAL "")
-            set(__download_url "${__deps_url_base_path}/${name}")
-        else()
-            set(__download_url "${__deps_url_base_path}/${urlpath}/${name}")
-        endif()
+        set(__download_url "${__deps_url_base_path}/${urlpath}/${name}")
+
         file(DOWNLOAD "${__download_url}" "${path}/${name}"
             STATUS DOWNLOAD_STATUS
         )
@@ -47,7 +44,7 @@ function(DownloadDeps)
 
     if(__deps_check_enabled)
         if(WIN32)
-            message("Checking release binaries...")
+            message("Checking windows binaries...")
             if(SIZEOF_VOID_P STREQUAL "4")
                 DownloadFile("libnode.lib" "${__base_path}/x86/Release" "x86/Release")
                 DownloadFile("libnode.dll" "${__base_path}/x86/Release" "x86/Release")
@@ -62,7 +59,11 @@ function(DownloadDeps)
         elseif(UNIX)
             message("Checking binaries...")
 
-            DownloadFile("libnode.so.108" "${__base_path}" "" ${__deps_linux_hashes})
+            if(SIZEOF_VOID_P STREQUAL "4")
+                DownloadFile("libnode.so.108" "${__base_path}/x86" "x86")
+            else()
+                DownloadFile("libnode.so.108" "${__base_path}/x64" "x64")
+            endif()
         endif()
 
         if(__deps_current_version)
