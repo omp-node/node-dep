@@ -72,9 +72,9 @@ function(DownloadDeps)
             message("Checking binaries...")
 
             if(SIZEOF_VOID_P STREQUAL "4")
-                DownloadFile("libnode.so.108" "${__base_path}/x86" "x86")
+                DownloadFile("libnode.so.108" "${__base_path}/${__deps_os_path_name}/x86" "x86")
             else()
-                DownloadFile("libnode.so.108" "${__base_path}/x64" "x64")
+                DownloadFile("libnode.so.108" "${__base_path}/${__deps_os_path_name}/x64" "x64")
             endif()
         endif()
 
